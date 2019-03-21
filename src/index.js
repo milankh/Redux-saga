@@ -1,24 +1,26 @@
-import React from 'react';
-import './index.css';
-import Counter from './components/Counter';
-import { render } from 'react-dom';
-import {createStore} from 'redux';
-import { Provider } from 'react-redux'
-import reducer from './reducers/reducer'
-import Posts from './components/Posts';
+import React from "react";
+import "./index.css";
+import Counter from "./components/Counter";
+import { render } from "react-dom";
+import { createStore, combineReducers } from "redux";
+import { Provider } from "react-redux";
 
-const store = createStore(reducer);
+import countReducer from "./reducers/countReducer";
+import postReducer from "./reducers/postReducer";
+import Posts from "./components/Post/Posts";
+import Thunk from "redux-thunk";
+
+const store = createStore(combineReducers({ countReducer, postReducer }));
 
 const App = () => (
-     <Provider store={store}>
-        <Counter />
-        <Posts />
-    </Provider >
+  <Provider store={store}>
+    <h1> Data is not in server / will be lost on reload</h1>
+    <Counter />
+    <Posts />
+  </Provider>
 );
 
-render( 
-    <App />
-    ,document.getElementById('root'));
+render(<App />, document.getElementById("root"));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

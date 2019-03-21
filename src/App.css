@@ -17,22 +17,57 @@
   font-size: 2rem;
   color: rgb(82, 32, 218);
   font-weight: bold;
-  
 }
 
 .done {
+  padding: 5px;
   background-color: green;
+  border-radius: 5px;
   color: white;
   padding: 2px;
+  cursor: pointer;
 }
 
 .not-done {
+  padding: 5px;
   background-color: rgb(173, 35, 35);
+  border-radius: 5px;
   color: white;
   padding: 2px;
+  cursor: pointer;
 }
 
 .posts-div {
   width: 50%;
   margin: auto;
+}
+
+li {
+  padding: 10px;
+  margin: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+input {
+  margin: 10px;
+}
+
+label {
+  margin: 10px;
+}
+
+.add {
+  background-color: blue;
+  color: white;
+  border: 0px;
+  border-radius: 5px;
+  padding: 0px 20px;
+  cursor: pointer;
 }
