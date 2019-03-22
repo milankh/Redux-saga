@@ -1,4 +1,6 @@
+const delay = ms => new Promise(res => setTimeout(res, ms));
 export async function fetchAllPosts() {
+  await delay(2000);
   return `
     [
         {

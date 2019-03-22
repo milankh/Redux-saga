@@ -1,19 +1,9 @@
 import React from "react";
 import "../../App.css";
 import { connect } from "react-redux";
-import { fetchAllPosts } from "../../helper/apiHelper";
-import {
-  fetchPost,
-  fetchPostSuccess,
-  fetchPostFailure,
-  addPost,
-  addPostFailure,
-  addPostSuccess,
-  completePost,
-  completePostFailure,
-  completePostSuccess
-} from "./actions";
-import { timeout } from "q";
+import { fetchPost, addPost, completePost } from "./actions";
+
+// this version uses redux saga for its async operations
 
 class Posts extends React.Component {
   //used to generate fake ids for each posts added
@@ -43,46 +33,16 @@ class Posts extends React.Component {
       userId: 2,
       id: this.idGenerator
     };
+    //here only addPost is called
+    // other actions () success and failures) are handled by saga
     this.props.addPost(post);
-    setTimeout(() => {
-      //some random condition for demo
-      if (2 === 4 - 2) this.props.addPostSuccess(post);
-      else {
-        this.props.addPostFailure("failed to add the post you entered");
-      }
-    }, 2000);
   };
 
   componentDidMount() {
-    //this method is not the good approach to carry out async operations in Redux (But this is the basic concept)
+    //only fetch post is called
+    // further actions are dispatched by saga
 
-    //first call fetchPostaction before fetching posts mannually
     this.props.fetchPost();
-
-    //yeha just some api call jasto feel garauna ko lagi 2 second ko timeout haleko
-    setTimeout(() => {
-      //fetch the posts
-      fetchAllPosts()
-        .then(value => {
-          let jsonResponse = JSON.parse(value);
-          //call fetchPostSuccess if fetching successfull
-          this.props.fetchPostSuccess(jsonResponse);
-        })
-        .catch(e => {
-          //call fetchPostFailure if fetching fails
-          this.props.fetchPostFailure("Fetching data failed due to some issue");
-        });
-    }, 2000);
-  }
-
-  makeComplete(id) {
-    this.props.completePost(id);
-    setTimeout(() => {
-      if (4 - 2 === 2) this.props.completePostSuccess(id);
-      else {
-        this.props.completePostFailure(id);
-      }
-    }, 2000);
   }
 
   getPostList() {
@@ -105,7 +65,7 @@ class Posts extends React.Component {
                 ) : (
                   <div
                     className="not-done"
-                    onClick={() => this.makeComplete(post.id)}
+                    onClick={() => this.props.completePost(post.id)}
                   >
                     Not Done
                   </div>
@@ -160,16 +120,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     fetchPost: () => dispatch(fetchPost()),
-    fetchPostSuccess: data => dispatch(fetchPostSuccess(data)),
-    fetchPostFailure: data => dispatch(fetchPostFailure(data)),
-
     addPost: post => dispatch(addPost(post)),
-    addPostFailure: error => dispatch(addPostFailure(error)),
-    addPostSuccess: post => dispatch(addPostSuccess(post)),
-
-    completePost: id => dispatch(completePost(id)),
-    completePostSuccess: id => dispatch(completePostSuccess(id)),
-    completePostFailure: id => dispatch(completePostFailure(id))
+    completePost: id => dispatch(completePost(id))
   };
 };
 
