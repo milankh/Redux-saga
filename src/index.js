@@ -2,15 +2,24 @@ import React from "react";
 import "./index.css";
 import Counter from "./components/Counter";
 import { render } from "react-dom";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 
 import countReducer from "./reducers/countReducer";
 import postReducer from "./reducers/postReducer";
 import Posts from "./components/Post/Posts";
-import Thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+import AppSaga from "./saga";
 
-const store = createStore(combineReducers({ countReducer, postReducer }));
+const sagaMiddleware = createSagaMiddleware();
+
+const store = createStore(
+  combineReducers({ countReducer, postReducer }),
+  {},
+  applyMiddleware(sagaMiddleware)
+);
+
+sagaMiddleware.run(AppSaga);
 
 const App = () => (
   <Provider store={store}>
